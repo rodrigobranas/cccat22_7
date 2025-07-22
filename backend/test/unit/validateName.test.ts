@@ -1,4 +1,4 @@
-import { validateName } from "../src/validateName";
+import { validateName } from "../../src/domain/validateName";
 
 test.each([
     "John Doe",
