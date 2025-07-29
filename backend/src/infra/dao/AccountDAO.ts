@@ -1,3 +1,5 @@
+import Account from "../../domain/Account";
+import Order from "../../domain/Order";
 import DatabaseConnection from "../database/DatabaseConnection";
 import { inject } from "../di/Registry";
 
@@ -13,11 +15,11 @@ export class AccountDAODatabase implements AccountDAO {
     connection!: DatabaseConnection;
 
     async save(account: any): Promise<void> {
-        await this.connection.query("insert into ccca.account (account_id, name, email, document, password) values ($1, $2, $3, $4, $5)", [account.accountId, account.name, account.email, account.document, account.password]);
+        await this.connection.query("insert into ccca.account (account_id, name, email, document, password) values ($1, $2, $3, $4, $5)", [account.accountId, account.getName(), account.getEmail(), account.getDocument(), account.getPassword()]);
     }
 
     async update(account: any): Promise<void> {
-        await this.connection.query("update ccca.account set name = $1, email = $2, document = $3, password = $4 where account_id = $5", [account.name, account.email, account.document, account.password, account.accountId]);
+        await this.connection.query("update ccca.account set name = $1, email = $2, document = $3, password = $4 where account_id = $5", [account.getName(), account.getEmail(), account.getDocument(), account.getPassword(), account.accountId]);
     }
 
     async getById(accountId: string): Promise<any> {

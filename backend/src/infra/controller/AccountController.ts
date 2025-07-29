@@ -1,4 +1,3 @@
-import AccountService from "../../application/service/AccountService";
 import HttpServer from "../http/HttpServer";
 import { inject } from "../di/Registry";
 import Signup from "../../application/usecase/Signup";

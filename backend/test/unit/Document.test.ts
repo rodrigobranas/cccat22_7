@@ -1,12 +1,12 @@
-import { validateCpf } from "../../src/domain/validateCpf";
+import Document from "../../src/domain/Document";
 
 test.each([
     "97456321558",
     "71428793860",
     "87748248800"
 ])("Deve testar um cpf válido: %s", (cpf: string) => {
-    const isValid = validateCpf(cpf);
-    expect(isValid).toBe(true);
+    const document = new Document(cpf);
+    expect(document).toBeDefined();
 });
 
 test.each([
@@ -16,6 +16,5 @@ test.each([
     "111",
     "1111111111111111",
 ])("Deve testar um cpf inválido: %s", (cpf: any) => {
-    const isValid = validateCpf(cpf);
-    expect(isValid).toBe(false);
+    expect(() => new Document(cpf)).toThrow(new Error("Invalid document"));
 });

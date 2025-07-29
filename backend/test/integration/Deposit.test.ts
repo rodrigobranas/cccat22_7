@@ -27,7 +27,7 @@ beforeEach(() => {
     withdraw = new Withdraw();
 });
 
-test("Deve sacar de uma conta", async () => {
+test("Deve depositar em uma conta", async () => {
     const input = {
         name: "John Doe",
         email: "john.doe@gmail.com",
@@ -41,18 +41,12 @@ test("Deve sacar de uma conta", async () => {
         quantity: 1000
     }
     await deposit.execute(inputDeposit);
-    const inputWithdraw = {
-        accountId: outputSignup.accountId,
-        assetId: "USD",
-        quantity: 500
-    }
-    await withdraw.execute(inputWithdraw);
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputGetAccount.balances[0].assetId).toBe("USD");
-    expect(outputGetAccount.balances[0].quantity).toBe(500);
+    expect(outputGetAccount.balances[0].quantity).toBe(1000);
 });
 
-test("Deve sacar de uma conta", async () => {
+test("Não deve depositar em uma conta que não existe", async () => {
     const input = {
         name: "John Doe",
         email: "john.doe@gmail.com",
@@ -61,17 +55,11 @@ test("Deve sacar de uma conta", async () => {
     }
     const outputSignup = await signup.execute(input);
     const inputDeposit = {
-        accountId: outputSignup.accountId,
-        assetId: "USD",
-        quantity: 500
-    }
-    await deposit.execute(inputDeposit);
-    const inputWithdraw = {
-        accountId: outputSignup.accountId,
+        accountId: crypto.randomUUID(),
         assetId: "USD",
         quantity: 1000
     }
-    await expect(() => withdraw.execute(inputWithdraw)).rejects.toThrow(new Error("Insuficient funds"));
+    await expect(() => deposit.execute(inputDeposit)).rejects.toThrow(new Error("Account not found"));
 });
 
 afterEach(async () => {

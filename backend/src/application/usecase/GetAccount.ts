@@ -7,7 +7,14 @@ export default class GetAccount {
 
     async execute (accountId: string): Promise<Output> {
         const account = await this.accountRepository.getById(accountId);
-        return account;
+        return {
+            accountId: account.accountId,
+            name: account.getName(),
+            email: account.getEmail(),
+            document: account.getDocument(),
+            password: account.getPassword(),
+            balances: account.balances
+        };
     }
 
 }
