@@ -47,7 +47,7 @@ beforeEach(() => {
 });
 
 test("Deve criar uma ordem de compra", async () => {
-    const marketId = `BTC/USD/${Math.random()}`;
+    const marketId = `BTC-USD-${Math.random()}`;
     const input = {
         name: "John Doe",
         email: "john.doe@gmail.com",
@@ -83,7 +83,7 @@ test("Deve criar uma ordem de compra", async () => {
 });
 
 test("Deve criar várias ordens de compra com preços diferentes", async () => {
-    const marketId = `BTC/USD/${Math.random()}`;
+    const marketId = `BTC-USD-${Math.random()}`;
     const input = {
         name: "John Doe",
         email: "john.doe@gmail.com",
@@ -128,7 +128,7 @@ test("Deve criar várias ordens de compra com preços diferentes", async () => {
 });
 
 test("Deve criar uma ordem de compra e outra de venda no mesmo valor", async () => {
-    const marketId = `BTC/USD/${Math.random()}`;
+    const marketId = `BTC-USD-${Math.random()}`;
     const input = {
         name: "John Doe",
         email: "john.doe@gmail.com",
@@ -162,7 +162,7 @@ test("Deve criar uma ordem de compra e outra de venda no mesmo valor", async () 
 });
 
 test("Deve criar duas ordens de compra e uma ordem de venda, no mesmo valor e mesma quantidade", async () => {
-    const marketId = `BTC/USD/${Math.random()}`;
+    const marketId = `BTC-USD-${Math.random()}`;
     const input = {
         name: "John Doe",
         email: "john.doe@gmail.com",
@@ -203,7 +203,7 @@ test("Deve criar duas ordens de compra e uma ordem de venda, no mesmo valor e me
 });
 
 test("Deve criar três ordens de compra e uma ordem de venda, com valores diferentes e mesma quantidade", async () => {
-    const marketId = `BTC/USD/${Math.random()}`;
+    const marketId = `BTC-USD-${Math.random()}`;
     const input = {
         name: "John Doe",
         email: "john.doe@gmail.com",
