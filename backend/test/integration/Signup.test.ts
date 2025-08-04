@@ -6,7 +6,7 @@ import { AccountAssetDAODatabase } from "../../src/infra/dao/AccountAssetDAO";
 import { AccountDAODatabase, AccountDAOMemory } from "../../src/infra/dao/AccountDAO";
 import DatabaseConnection, { PgPromiseAdapter } from "../../src/infra/database/DatabaseConnection";
 import Registry from "../../src/infra/di/Registry";
-import { AccountRepositoryDatabase } from "../../src/infra/repository/AccountRepository";
+import { AccountRepositoryDatabase, AccountRepositoryMemory } from "../../src/infra/repository/AccountRepository";
 import sinon from "sinon";
 
 let connection: DatabaseConnection;
@@ -114,9 +114,9 @@ test("Deve criar uma conta com mock", async () => {
     accountDAOMock.restore();
 });
 
-test.skip("Deve criar uma conta com fake", async () => {
-    const accountDAO = new AccountDAOMemory();
-    Registry.getInstance().provide("accountDAO", accountDAO);
+test("Deve criar uma conta com fake", async () => {
+    const accountRepository = new AccountRepositoryMemory();
+    Registry.getInstance().provide("accountRepository", accountRepository);
     signup = new Signup();
     const input = {
         name: "John Doe",

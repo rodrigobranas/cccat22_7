@@ -39,3 +39,21 @@ export class AccountRepositoryDatabase implements AccountRepository {
     }
 
 }
+
+export class AccountRepositoryMemory implements AccountRepository {
+    private accounts: Map<string, Account> = new Map();
+
+    async save(account: Account): Promise<void> {
+        this.accounts.set(account.accountId, account);
+    }
+
+    async update(account: Account): Promise<void> {
+        this.accounts.set(account.accountId, account);
+    }
+
+    async getById(accountId: string): Promise<Account> {
+        const account = this.accounts.get(accountId);
+        if (!account) throw new Error("Account not found");
+        return account;
+    }
+}
