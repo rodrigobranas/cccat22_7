@@ -25,6 +25,11 @@ export default class Wallet {
         return balance;
     }
 
+    block (assetId: string, quantity: number) {
+        // const balance = this.getBalance(asset);
+        // if (!balance || balance.quantity < input.quantity) throw new Error("Insufficient funds");
+    }
+
 }
 
 type Balance = {

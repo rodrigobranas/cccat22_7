@@ -20,7 +20,6 @@ export class ExpressAdapter implements HttpServer {
         this.app[method](url, async (req: Request, res: Response) => {
             const params = req.params;
             const body = req.body;
-            console.log(url);
             try {
                 const output = await callback(params, body);
                 res.json(output);
