@@ -242,7 +242,7 @@ test("Deve criar três ordens de compra e uma ordem de venda, com valores difere
     expect(outputGetDepth.buys).toHaveLength(0);
     expect(outputGetDepth.sells).toHaveLength(0);
     const outputGetOrder3 = await getOrder.execute(outputPlaceOrder3.orderId);
-    console.log(outputGetOrder3);
+    // console.log(outputGetOrder3);
 });
 
 afterEach(async () => {

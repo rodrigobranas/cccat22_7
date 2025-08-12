@@ -3,6 +3,8 @@ import { inject } from "../di/Registry";
 import PlaceOrder from "../../application/usecase/PlaceOrder";
 import GetOrder from "../../application/usecase/GetOrder";
 import GetDepth from "../../application/usecase/GetDepth";
+import OrderRepository from "../repository/OrderRepository";
+import Order from "../../domain/Order";
 
 // Interface Adapter
 export default class OrderController {
@@ -14,11 +16,20 @@ export default class OrderController {
     getOrder!: GetOrder;
     @inject("getDepth")
     getDepth!: GetDepth;
+    @inject("orderRepository")
+    orderRepository!: OrderRepository;
 
     constructor () {
         this.httpServer.route("post", "/place_order", async (params: any, body: any) => {
             const output = await this.placeOrder.execute(body);
             return output;
+        });
+
+        this.httpServer.route("post", "/update_order", async (params: any, body: any) => {
+            // console.log("updateOrder");
+            const input = body;
+            const order = new Order(input.orderId, input.accountId, input.marketId, input.side, input.quantity, input.price, input.fillQuantity, input.fillPrice, input.status, new Date(input.timestamp));
+            await this.orderRepository.update(order);
         });
 
         this.httpServer.route("get", "/orders/:orderId", async (params: any, body: any) => {

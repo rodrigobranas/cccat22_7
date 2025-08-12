@@ -16,17 +16,25 @@ import { MediatorMemory } from "./infra/mediator/Mediator";
 import { AccountRepositoryDatabase } from "./infra/repository/AccountRepository";
 import { OrderRepositoryDatabase } from "./infra/repository/OrderRepository";
 import Book from "./domain/Book";
-import { OrderHandlerBook, OrderHandlerExecuteOrder } from "./infra/handler/OrderHandler";
+import { OrderHandlerBook, OrderHandlerExecuteHttp, OrderHandlerExecuteOrder, OrderHandlerExecuteQueue } from "./infra/handler/OrderHandler";
+import { AxiosAdapter } from "./infra/http/HttpClient";
+import { RabbitMQAdapter } from "./infra/queue/Queue";
+import Order from "./domain/Order";
 
 // entrypoint
 async function main () {
     const httpServer = new ExpressAdapter();
+    const queue = new RabbitMQAdapter();
+    await queue.connect();
     Registry.getInstance().provide("mediator", new MediatorMemory());
+    Registry.getInstance().provide("queue", queue);
+    Registry.getInstance().provide("httpClient", new AxiosAdapter());
     Registry.getInstance().provide("databaseConnection", new PgPromiseAdapter());
     Registry.getInstance().provide("accountDAO", new AccountDAODatabase());
     Registry.getInstance().provide("accountAssetDAO", new AccountAssetDAODatabase());
     Registry.getInstance().provide("accountRepository", new AccountRepositoryDatabase());
-    Registry.getInstance().provide("orderRepository", new OrderRepositoryDatabase());
+    const orderRepository = new OrderRepositoryDatabase();
+    Registry.getInstance().provide("orderRepository", orderRepository);
     Registry.getInstance().provide("httpServer", httpServer);
     Registry.getInstance().provide("signup", new Signup());
     Registry.getInstance().provide("getAccount", new GetAccount());
@@ -38,7 +46,14 @@ async function main () {
     // BookManager objeto que tem vários books organizado por marketId
     Registry.getInstance().provide("book", new Book("BTC-USD"));
     // const handler = new OrderHandlerBook();
-    const handler = new OrderHandlerExecuteOrder();
+    // const handler = new OrderHandlerExecuteOrder();
+    // const handler = new OrderHandlerExecuteHttp();
+    const handler = new OrderHandlerExecuteQueue();
+    queue.consume("orderFilled.updateOrder", async (input: any) => {
+        // console.log("orderFilled");
+        const order = new Order(input.orderId, input.accountId, input.marketId, input.side, input.quantity, input.price, input.fillQuantity, input.fillPrice, input.status, new Date(input.timestamp));
+        await orderRepository.update(order);
+    });
     handler.handle();
     new AccountController();
     new OrderController();
