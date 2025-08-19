@@ -5,6 +5,7 @@ import GetOrder from "../../application/usecase/GetOrder";
 import GetDepth from "../../application/usecase/GetDepth";
 import OrderRepository from "../repository/OrderRepository";
 import Order from "../../domain/Order";
+import Queue from "../queue/Queue";
 
 // Interface Adapter
 export default class OrderController {
@@ -18,11 +19,17 @@ export default class OrderController {
     getDepth!: GetDepth;
     @inject("orderRepository")
     orderRepository!: OrderRepository;
+    @inject("queue")
+    queue!: Queue;
 
     constructor () {
         this.httpServer.route("post", "/place_order", async (params: any, body: any) => {
             const output = await this.placeOrder.execute(body);
             return output;
+        });
+
+        this.httpServer.route("post", "/place_order_async", async (params: any, body: any) => {
+            this.queue.publish("placeOrder", body);
         });
 
         this.httpServer.route("post", "/update_order", async (params: any, body: any) => {

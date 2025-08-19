@@ -4,6 +4,7 @@ import OrderRepository from "../../infra/repository/OrderRepository";
 import Order from "../../domain/Order";
 import Mediator from "../../infra/mediator/Mediator";
 import WalletRepository from "../../infra/repository/WalletRepository";
+import Outbox from "../../infra/outbox/Outbox";
 
 export default class PlaceOrder {
     @inject("accountRepository")
@@ -31,6 +32,7 @@ export default class PlaceOrder {
         const order = Order.create(input.accountId, input.marketId, input.side, input.quantity, input.price);
         await this.orderRepository.save(order);
         await this.mediator.notifyAll("orderPlaced", order);
+        console.log("placeOrder");
         // connection.commit();
         return {
             orderId: order.orderId

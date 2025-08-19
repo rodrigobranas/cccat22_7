@@ -1,9 +1,13 @@
+import CancelOrder from "../../application/usecase/CancelOrder";
 import ExecuteOrder from "../../application/usecase/ExecuteOrder";
+import PlaceOrder from "../../application/usecase/PlaceOrder";
+import UpdateOrder from "../../application/usecase/UpdateOrder";
 import Book from "../../domain/Book";
 import Order from "../../domain/Order";
 import { inject } from "../di/Registry";
 import HttpClient from "../http/HttpClient";
 import Mediator from "../mediator/Mediator";
+import Outbox from "../outbox/Outbox";
 import Queue from "../queue/Queue";
 import OrderRepository from "../repository/OrderRepository";
 
@@ -65,11 +69,33 @@ export class OrderHandlerExecuteQueue implements OrderHandler {
     mediator!: Mediator;
     @inject("queue")
     queue!: Queue;
+    @inject("updateOrder")
+    updateOrder!: UpdateOrder;
+    @inject("cancelOrder")
+    cancelOrder!: CancelOrder;
+    @inject("placeOrder")
+    placeOrder!: PlaceOrder;
+    @inject("outbox")
+    outbox!: Outbox;
     
     handle(): void {
+        this.queue.consume("placeOrder", async (input: any) => {
+            await this.placeOrder.execute(input);
+        });
+
         this.mediator.register("orderPlaced", async (order: Order) => {
             // console.log("orderPlaced");
             await this.queue.publish("orderPlaced", order);
+            // await this.outbox.publish("orderPlaced", order);
+        });
+        this.queue.consume("orderFilled.updateOrder", async (input: any) => {
+            console.log("orderFilled");
+            await this.updateOrder.execute({ orderId: input.orderId, fillQuantity: input.fillQuantity, fillPrice: input.fillPrice });
+            
+        });
+        this.queue.consume("orderRejected.cancelOrder", async (input: any) => {
+            console.log("orderRejected");
+            await this.cancelOrder.execute(input.orderId);
         });
     }
 

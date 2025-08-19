@@ -146,21 +146,21 @@ test.only("Deve criar uma ordem de compra e outra de venda no mesmo valor", asyn
     }
     await axios.post("http://localhost:3000/deposit", inputDeposit);
     
-    await axios.post("http://localhost:3000/place_order", {
+    await axios.post("http://localhost:3000/place_order_async", {
         accountId: outputSignup.accountId,
         marketId,
         side: "buy",
         quantity: 1,
         price: 85000
     });
-    await axios.post("http://localhost:3000/place_order", {
+    await axios.post("http://localhost:3000/place_order_async", {
         accountId: outputSignup.accountId,
         marketId,
         side: "sell",
         quantity: 1,
         price: 85000
     });
-    await sleep(200);
+    await sleep(4000);
     const responseGetDepth = await axios.get(`http://localhost:3000/markets/${marketId}/depth`);
     const outputGetDepth = responseGetDepth.data;
     expect(outputGetDepth.buys).toHaveLength(0);

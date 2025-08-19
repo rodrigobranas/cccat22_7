@@ -36,4 +36,10 @@ export default class Order {
             this.status = "closed";
         }
     }
+
+    calculateStatus () {
+        if (this.getAvailableQuantity() === 0) {
+            this.status = "closed";
+        }
+    }
 }

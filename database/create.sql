@@ -42,3 +42,12 @@ create table ccca.trade (
 	timestamp timestamptz,
 	primary key (trade_id)
 );
+
+create table ccca.message (
+	message_id uuid,
+	event text,
+	data jsonb,
+	status text,
+	timestamp timestamptz,
+	primary key (message_id)
+);
