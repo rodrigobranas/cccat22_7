@@ -23,6 +23,8 @@ import Order from "./domain/Order";
 import UpdateOrder from "./application/usecase/UpdateOrder";
 import CancelOrder from "./application/usecase/CancelOrder";
 import Outbox from "./infra/outbox/Outbox";
+import { CieloPaymentGateway } from "./infra/gateway/PaymentGateway";
+import { CieloPaymentProcessor } from "./infra/fallback/PaymentProcessor";
 
 // entrypoint
 async function main () {
@@ -38,10 +40,10 @@ async function main () {
     Registry.getInstance().provide("mediator", new MediatorMemory());
     Registry.getInstance().provide("queue", queue);
     Registry.getInstance().provide("httpClient", new AxiosAdapter());
-    
     Registry.getInstance().provide("accountDAO", new AccountDAODatabase());
     Registry.getInstance().provide("accountAssetDAO", new AccountAssetDAODatabase());
     Registry.getInstance().provide("accountRepository", new AccountRepositoryDatabase());
+    Registry.getInstance().provide("paymentProcessor", new CieloPaymentProcessor());
     const orderRepository = new OrderRepositoryDatabase();
     Registry.getInstance().provide("orderRepository", orderRepository);
     Registry.getInstance().provide("httpServer", httpServer);

@@ -24,9 +24,9 @@ beforeEach(() => {
     Registry.getInstance().provide("accountAssetDAO", new AccountAssetDAODatabase());
     Registry.getInstance().provide("accountRepository", new AccountRepositoryDatabase());
     // Registry.getInstance().provide("paymentGateway", new CieloPaymentGateway());
-    Registry.getInstance().provide("paymentGateway", new PJBankPaymentGateway());
-    const paymentProcessor = new PJBankPaymentProcessor(new CieloPaymentProcessor());
-    Registry.getInstance().provide("paymentProcessor", paymentProcessor);
+    // Registry.getInstance().provide("paymentGateway", new PJBankPaymentGateway());
+    // const paymentProcessor = new PJBankPaymentProcessor(new CieloPaymentProcessor());
+    Registry.getInstance().provide("paymentProcessor", new CieloPaymentProcessor());
     signup = new Signup();
     getAccount = new GetAccount();
     deposit = new Deposit();

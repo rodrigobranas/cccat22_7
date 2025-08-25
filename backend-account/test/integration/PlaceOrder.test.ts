@@ -10,6 +10,7 @@ import { AccountAssetDAODatabase } from "../../src/infra/dao/AccountAssetDAO";
 import { AccountDAODatabase } from "../../src/infra/dao/AccountDAO";
 import DatabaseConnection, { PgPromiseAdapter } from "../../src/infra/database/DatabaseConnection";
 import Registry from "../../src/infra/di/Registry";
+import { CieloPaymentProcessor } from "../../src/infra/fallback/PaymentProcessor";
 import { MediatorMemory } from "../../src/infra/mediator/Mediator";
 import { AccountRepositoryDatabase } from "../../src/infra/repository/AccountRepository";
 import { OrderRepositoryDatabase } from "../../src/infra/repository/OrderRepository";
@@ -31,6 +32,7 @@ beforeEach(() => {
     Registry.getInstance().provide("accountAssetDAO", new AccountAssetDAODatabase());
     Registry.getInstance().provide("accountRepository", new AccountRepositoryDatabase());
     Registry.getInstance().provide("orderRepository", new OrderRepositoryDatabase());
+    Registry.getInstance().provide("paymentProcessor", new CieloPaymentProcessor());
     const mediator = new MediatorMemory();
     Registry.getInstance().provide("mediator", mediator);
     signup = new Signup();
